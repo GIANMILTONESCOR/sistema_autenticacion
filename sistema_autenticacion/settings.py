@@ -140,9 +140,9 @@ EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.Em
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'padilla.milton.2004@gmail.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'guyj hhsc wseg iyht')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'padilla.milton.2004@gmail.com')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'tu correo electronico')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'tu contraseña de app de google')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'tu correo electronico')
 #guyj hhsc wseg iyht
 # Configuración para django-allauth
 AUTHENTICATION_BACKENDS = [
@@ -154,7 +154,7 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 2
 
-# Configuración de AllAuth
+# Configuración de AllAut
 #ACCOUNT_AUTHENTICATION_METHOD = 'email'
 #ACCOUNT_EMAIL_REQUIRED = True
 #ACCOUNT_UNIQUE_EMAIL = True
