@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center mb-5">
+        <h1 class="display-4">¡Bienvenido/a, {{ user.first_name }}!</h1>
+        <p class="lead">Has iniciado sesión correctamente en el sistema de autenticación dual.</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Información de tu cuenta</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Nombre:</strong> {{ user.get_full_name }}</p>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Fecha de registro:</strong> {{ user.fecha_registro|date:"d/m/Y" }}</p>
+                        <p><strong>Último acceso:</strong> {{ user.hora_ultimo_acceso|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Autenticado con Google:</strong> {% if user.es_autenticado_por_google %}Sí{% else %}No{% endif %}</p>
+                    </div>
+                </div>
+                <a href="{% url 'perfil' %}" class="btn btn-outline-primary">Editar perfil</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-shield-alt fa-4x mb-3 text-primary"></i>
+                <h5 class="card-title">Seguridad garantizada</h5>
+                <p class="card-text">Tu información está protegida con los más altos estándares de seguridad y cifrado.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-sync-alt fa-4x mb-3 text-primary"></i>
+                <h5 class="card-title">Múltiples opciones</h5>
+                <p class="card-text">Puedes iniciar sesión tanto con tu cuenta registrada como con Google.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-user-lock fa-4x mb-3 text-primary"></i>
+                <h5 class="card-title">Control total</h5>
+                <p class="card-text">Tienes control total sobre tu cuenta y tus datos en todo momento.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

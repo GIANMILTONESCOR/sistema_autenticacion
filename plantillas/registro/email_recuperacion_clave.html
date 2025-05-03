@@ -1,0 +1,16 @@
+{% autoescape off %}
+Hola {{ user.get_full_name|default:user.username }},
+
+Has recibido este correo porque has solicitado restablecer la contraseña para tu cuenta en el Sistema de Autenticación Dual.
+
+Por favor, visita la siguiente página para establecer una nueva contraseña:
+
+{{ protocol }}://{{ domain }}{% url 'recuperacion_clave_confirmar' uidb64=uid token=token %}
+
+Si no solicitaste este cambio, puedes ignorar este correo y tu contraseña permanecerá sin cambios.
+
+Gracias por usar nuestro sistema.
+
+Atentamente,
+El equipo del Sistema de Autenticación Dual
+{% endautoescape %}

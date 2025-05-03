@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Recuperar Contraseña - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="formulario-autenticacion">
+            <h2 class="text-center mb-4">Recuperar Contraseña</h2>
+            <p class="text-center mb-4">
+                Ingresa tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+            </p>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary w-100 mt-3">Enviar enlace de recuperación</button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'login' %}">Volver a Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

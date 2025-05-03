@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Mi Perfil - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Mi Perfil</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4 mb-md-0">
+                        <div class="avatar-container mb-3">
+                            <img src="https://via.placeholder.com/150" alt="Foto de perfil" class="img-fluid rounded-circle" style="width: 150px; height: 150px;">
+                        </div>
+                        <h4>{{ user.get_full_name }}</h4>
+                        <p class="text-muted">{{ user.email }}</p>
+                        
+                        <div class="mt-4">
+                            <p><strong>Fecha de registro:</strong> {{ user.fecha_registro|date:"d/m/Y" }}</p>
+                            <p><strong>Último acceso:</strong> {{ user.hora_ultimo_acceso|date:"d/m/Y H:i" }}</p>
+                            <p>
+                                <strong>Método de autenticación:</strong> 
+                                {% if user.es_autenticado_por_google %}
+                                    <span class="badge bg-primary">Google</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Registro manual</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <h5 class="border-bottom pb-2 mb-3">Información personal</h5>
+                        
+                        <form method="post" class="mb-4">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="first_name" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="last_name" class="form-label">Apellido</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="username" class="form-label">Nombre de usuario</label>
+                                    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Correo electrónico</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" readonly>
+                                    <small class="text-muted">El correo electrónico no se puede cambiar</small>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </form>
+                        
+                        {% if not user.es_autenticado_por_google %}
+                            <h5 class="border-bottom pb-2 mb-3 mt-5">Cambiar contraseña</h5>
+                            <form method="post" action="{% url 'recuperacion_clave' %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="old_password" class="form-label">Contraseña actual</label>
+                                    <input type="password" class="form-control" id="old_password" name="old_password">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new_password1" class="form-label">Nueva contraseña</label>
+                                    <input type="password" class="form-control" id="new_password1" name="new_password1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new_password2" class="form-label">Confirmar nueva contraseña</label>
+                                    <input type="password" class="form-control" id="new_password2" name="new_password2">
+                                </div>
+                                <button type="submit" class="btn btn-secondary">Cambiar contraseña</button>
+                            </form>
+                        {% endif %}
+                        
+                        <h5 class="border-bottom pb-2 mb-3 mt-5">Seguridad de la cuenta</h5>
+                        <p>
+                            <i class="fas fa-clock me-2"></i> Último inicio de sesión: {{ user.hora_ultimo_acceso|date:"d/m/Y H:i:s" }}
+                        </p>
+                        <p>
+                            <i class="fas fa-map-marker-alt me-2"></i> IP del último acceso: {{ user.ip_ultimo_acceso|default:"No disponible" }}
+                        </p>
+                        
+                        <div class="mt-4 border-top pt-4">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarCuenta">
+                                <i class="fas fa-trash-alt me-2"></i> Eliminar cuenta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de eliminación de cuenta -->
+<div class="modal fade" id="modalEliminarCuenta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar cuenta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">¿Estás seguro/a de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+                <p class="mb-3">Todos tus datos serán eliminados permanentemente del sistema.</p>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="confirmarEliminacion">
+                    <label class="form-check-label" for="confirmarEliminacion">
+                        Entiendo que esta acción es irreversible y quiero eliminar mi cuenta
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="botonEliminarCuenta" disabled>Eliminar cuenta</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Habilitar/deshabilitar el botón de eliminar cuenta
+    document.getElementById('confirmarEliminacion').addEventListener('change', function() {
+        document.getElementById('botonEliminarCuenta').disabled = !this.checked;
+    });
+</script>
+{% endblock %}

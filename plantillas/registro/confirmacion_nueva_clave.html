@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Establecer Nueva Contraseña - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="formulario-autenticacion">
+            <h2 class="text-center mb-4">Establecer Nueva Contraseña</h2>
+            
+            {% if validlink %}
+                <p class="text-center mb-4">
+                    Por favor, ingresa y confirma tu nueva contraseña.
+                </p>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Cambiar Contraseña</button>
+                </form>
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    <p>El enlace de restablecimiento de contraseña no es válido, posiblemente porque ya ha sido utilizado.</p>
+                    <p>Por favor, solicita un nuevo enlace de restablecimiento de contraseña.</p>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{% url 'recuperacion_clave' %}" class="btn btn-primary">Solicitar Nuevo Enlace</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

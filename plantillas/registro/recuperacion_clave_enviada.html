@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Correo Enviado - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="formulario-autenticacion">
+            <div class="text-center mb-4">
+                <i class="fas fa-envelope fa-4x text-primary"></i>
+            </div>
+            <h2 class="text-center mb-4">Correo Enviado</h2>
+            <div class="alert alert-success" role="alert">
+                <p>Hemos enviado un correo electrónico con instrucciones para restablecer tu contraseña.</p>
+                <p>Si no recibes un correo electrónico, asegúrate de haber ingresado la dirección con la que te registraste y revisa tu carpeta de spam.</p>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'login' %}" class="btn btn-outline-primary">Volver a Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
