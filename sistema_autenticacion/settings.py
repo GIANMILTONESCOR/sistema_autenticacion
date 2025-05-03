@@ -49,7 +49,6 @@ MIDDLEWARE = [
     
     # Middleware de django-allauth (necesario para versiones recientes)
     'allauth.account.middleware.AccountMiddleware',
-    
     # Middleware personalizado para registrar actividad (agrégalo después de implementarlo)
     # 'usuarios.middleware.MiddlewareActividadUsuario',
 ]
@@ -138,13 +137,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Configuración de correo electrónico
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = os.getenv('EMAIL_HOST', '')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-responder@ejemplo.com')
-
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'padilla.milton.2004@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'guyj hhsc wseg iyht')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'padilla.milton.2004@gmail.com')
+#guyj hhsc wseg iyht
 # Configuración para django-allauth
 AUTHENTICATION_BACKENDS = [
     # Necesario para iniciar sesión por nombre de usuario en Django admin
@@ -153,7 +152,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SITE_ID = 1
+SITE_ID = 2
 
 # Configuración de AllAuth
 #ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -184,11 +183,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         },
         'VERIFIED_EMAIL': True,
-        'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID', ''),
-            'secret': os.getenv('GOOGLE_CLIENT_SECRET', ''),
-            'key': ''
-        }
+        'CALLBACK_URL': 'http://127.0.0.1:8000/accounts/google/login/callback/',  # Adaptado a tu URL real
     }
 }
 

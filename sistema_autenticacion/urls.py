@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('usuarios.urls')),
-    path('cuentas/', include('allauth.urls')),  # URLs de django-allauth
+    path('accounts/', include('allauth.urls')),  # URLs de django-allauth
 ]
 
 # Servir archivos estáticos en desarrollo

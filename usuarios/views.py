@@ -14,6 +14,33 @@ from django.contrib.auth.views import (
 )
 from .forms import FormularioRecuperacionClave, FormularioNuevaContraseña
 from ipware import get_client_ip
+from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+from django.utils.crypto import get_random_string
+import string
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+
+@login_required
+def vista_cambiar_clave(request):
+    """Vista para que el usuario cambie su propia contraseña."""
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Actualizar la sesión para que el usuario no tenga que volver a iniciar sesión
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Tu contraseña ha sido cambiada correctamente.')
+            return redirect('perfil')
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    return render(request, 'usuarios/cambiar_clave.html', {
+        'form': form,
+        'titulo': 'Cambiar Contraseña'
+    })
 
 def obtener_ip_usuario(request):
     """Obtiene la dirección IP del usuario."""
@@ -21,6 +48,64 @@ def obtener_ip_usuario(request):
     return client_ip
 
 @csrf_protect
+def recuperacion_clave_temporal(request):
+    """Vista para enviar una contraseña temporal por correo."""
+    if request.user.is_authenticated:
+        return redirect('inicio')
+        
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        Usuario = get_user_model()
+        
+        try:
+            # Buscar el usuario por correo
+            usuario = Usuario.objects.get(email=email)
+            
+            # Generar contraseña temporal (12 caracteres alfanuméricos)
+            caracteres = string.ascii_letters + string.digits
+            clave_temporal = get_random_string(12, caracteres)
+            
+            # Actualizar la contraseña del usuario
+            usuario.set_password(clave_temporal)
+            usuario.save()
+            
+            # Enviar correo con la contraseña temporal
+            asunto = 'Tu nueva contraseña temporal - Sistema de Autenticación Dual'
+            mensaje = f"""
+Hola {usuario.get_full_name() or usuario.username},
+
+Has solicitado recuperar tu contraseña. Hemos generado una contraseña temporal para ti:
+
+{clave_temporal}
+
+Por favor, utiliza esta contraseña para iniciar sesión y luego cámbiala inmediatamente por una de tu elección.
+
+Si no solicitaste este cambio, por favor contacta con el administrador del sistema inmediatamente.
+
+Saludos,
+El equipo del Sistema de Autenticación Dual
+            """
+            
+            # Enviar el correo
+            send_mail(
+                asunto,
+                mensaje,
+                None,  # From email (usará DEFAULT_FROM_EMAIL de settings)
+                [email],
+                fail_silently=False,
+            )
+            
+            messages.success(request, 'Te hemos enviado una contraseña temporal a tu correo electrónico.')
+            return redirect('login')
+            
+        except Usuario.DoesNotExist:
+            messages.error(request, 'No existe ninguna cuenta con este correo electrónico.')
+    
+    return render(request, 'registro/formulario_recuperacion_temporal.html', {
+        'titulo': 'Recuperar Contraseña'
+    })
+
+
 def vista_registro(request):
     """Vista para el registro manual de usuarios."""
     if request.user.is_authenticated:
@@ -79,6 +164,26 @@ def vista_login(request):
     })
 
 @login_required
+def vista_cambiar_clave(request):
+    """Vista para que el usuario cambie su propia contraseña."""
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Actualizar la sesión para que el usuario no tenga que volver a iniciar sesión
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Tu contraseña ha sido cambiada correctamente.')
+            return redirect('perfil')
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    return render(request, 'usuarios/cambiar_clave.html', {
+        'form': form,
+        'titulo': 'Cambiar Contraseña'
+    })
+
 def vista_logout(request):
     """Vista para cerrar sesión."""
     logout(request)
@@ -104,6 +209,7 @@ class VistaRecuperacionClave(PasswordResetView):
     """Vista personalizada para solicitar recuperación de contraseña."""
     template_name = 'registro/formulario_recuperacion_clave.html'
     email_template_name = 'registro/email_recuperacion_clave.html'
+    subject_template_name = 'registro/asunto_email_recuperacion.txt' 
     success_url = reverse_lazy('recuperacion_clave_enviada')
     form_class = FormularioRecuperacionClave
 

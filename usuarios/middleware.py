@@ -77,3 +77,16 @@ class MiddlewareActividadUsuario:
                     usuario.save(update_fields=['hora_ultimo_acceso', 'ip_ultimo_acceso'])
         
         return response
+
+class GoogleRedirectDebugMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Intercepta las solicitudes para capturar la URL de redirección
+        if 'google' in request.path and 'login' in request.path:
+            print(f"DEBUG GOOGLE AUTH: Requested path: {request.path}")
+            print(f"DEBUG GOOGLE AUTH: Full URL: {request.build_absolute_uri()}")
+            
+        response = self.get_response(request)
+        return response

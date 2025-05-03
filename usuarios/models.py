@@ -12,7 +12,11 @@ class UsuarioPersonalizado(AbstractUser):
     ip_ultimo_acceso = models.GenericIPAddressField(null=True, blank=True, verbose_name="IP del último acceso")
     fecha_registro = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de registro")
     hora_ultimo_acceso = models.DateTimeField(default=timezone.now, verbose_name="Hora del último acceso")
-    
+    debe_cambiar_clave = models.BooleanField(
+        default=False, 
+        verbose_name="Debe cambiar contraseña"
+    )
+
     # Campos requeridos para AbstractUser
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

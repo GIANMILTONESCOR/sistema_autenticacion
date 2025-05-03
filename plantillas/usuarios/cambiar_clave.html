@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Cambiar Contraseña - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="formulario-autenticacion">
+            <h2 class="text-center mb-4">Cambiar Contraseña</h2>
+            <p class="text-center mb-4">
+                Por favor ingresa tu contraseña actual y luego tu nueva contraseña dos veces.
+            </p>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary w-100 mt-3">Cambiar Contraseña</button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'perfil' %}">Volver a Mi Perfil</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

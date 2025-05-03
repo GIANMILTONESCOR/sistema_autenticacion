@@ -60,10 +60,10 @@
                             
                             <button type="submit" class="btn btn-primary">Guardar cambios</button>
                         </form>
-                        
+
                         {% if not user.es_autenticado_por_google %}
                             <h5 class="border-bottom pb-2 mb-3 mt-5">Cambiar contraseña</h5>
-                            <form method="post" action="{% url 'recuperacion_clave' %}">
+                            <form method="post" action="{% url 'cambiar_clave' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <label for="old_password" class="form-label">Contraseña actual</label>
